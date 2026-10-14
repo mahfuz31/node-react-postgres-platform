@@ -78,11 +78,33 @@ app.post("/api/items", async (req, res) => {
   }
 });
 
-initSchema()
-  .then(() => {
-    app.listen(PORT, () => console.log(`backend listening on :${PORT}`));
-  })
-  .catch((err) => {
-    console.error("failed to initialize schema:", err);
-    process.exit(1);
-  });
+async function startServer() {
+  const maxAttempts = 10;
+  const retryDelayMs = 3000;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      await initSchema();
+      app.listen(PORT, () => {
+        console.log(`backend listening on :${PORT}`);
+      });
+      return;
+    } catch (err) {
+      console.error(
+        `Database initialization attempt ${attempt}/${maxAttempts} failed:`,
+        err.message
+      );
+
+      if (attempt < maxAttempts) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, retryDelayMs)
+        );
+      }
+    }
+  }
+
+  console.error("Database initialization failed after all retry attempts.");
+  process.exit(1);
+}
+
+startServer();
