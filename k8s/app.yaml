@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: node-react-postgres-platform-backend:latest
+          image: ghcr.io/mahfuz31/node-react-postgres-platform-backend:assessment-cloudly-devops-latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4000
@@ -98,7 +98,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: node-react-postgres-platform-frontend:latest
+          image: ghcr.io/mahfuz31/node-react-postgres-platform-frontend:assessment-cloudly-devops-latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
